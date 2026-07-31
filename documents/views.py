@@ -29,6 +29,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_ollama import ChatOllama
 from langchain_core.prompts import PromptTemplate
 from embeddings import get_embeddings
+from .models import Document
+from chatbot.models import ChatMessage
 
 load_dotenv()
 
@@ -123,6 +125,17 @@ def upload_pdf(request):
 
     print(f"✓ Indexed {len(chunks)} chunks into ChromaDB at '{VECTOR_DB_PATH}'")
     print("="*60 + "\n")
+
+    # Save Document record to Django Database
+    try:
+        doc_record = Document.objects.create(
+            title=pdf.name,
+            file=pdf,
+            content=full_extracted_text
+        )
+        print(f"✓ Saved Document ID #{doc_record.id} '{pdf.name}' to Django Database")
+    except Exception as e:
+        print(f"Error saving Document to database: {e}")
 
     # Clean up uploaded temporary file
     if os.path.exists(file_path):
@@ -229,6 +242,16 @@ Answer:""",
     print("\n" + "="*60)
     print(f" 🤖 [STEP 4: OLLAMA RESPONSE]:\n{answer}")
     print("="*60 + "\n")
+
+    # Save ChatMessage record to Django Database
+    try:
+        chat_record = ChatMessage.objects.create(
+            question=question,
+            answer=answer
+        )
+        print(f"✓ Saved ChatMessage ID #{chat_record.id} to Django Database")
+    except Exception as e:
+        print(f"Error saving ChatMessage to database: {e}")
 
     return JsonResponse({
         "answer": answer
