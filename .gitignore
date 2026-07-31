@@ -1,0 +1,23 @@
+# Virtual environment
+venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Django
+db.sqlite3
+media/
+
+# Environment
+.env
+
+# Chroma
+chroma_db/
+cache/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
