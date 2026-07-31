@@ -142,7 +142,7 @@ def upload_pdf(request):
         os.remove(file_path)
 
     return JsonResponse({
-        "message": f"PDF '{pdf.name}' uploaded and indexed successfully ({len(chunks)} chunks)."
+        "message": f"PDF '{pdf.name}' uploaded and indexed successfully."
     })
 
 
